@@ -57,37 +57,8 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 This project includes a simple API for opportunities, pathways, mentor discovery, and mentorship requests.
 
-### Seed demo data
-
-Run the database migrations and seed the sample users, opportunities, pathways, and mentorship requests:
-
-```bash
-php artisan migrate --seed
-```
-
-Seeded accounts:
-
-- Admin: `admin@example.com` / `password123`
-- Student: `test2@example.com` / `password123`
-- Mentor One: `mentor1@example.com` / `password123`
-- Mentor Two: `mentor2@example.com` / `password123`
-
-### Example API calls
-
-Login:
-
-```bash
-curl -X POST http://127.0.0.1:8000/api/v1/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"mentor2@example.com","password":"password123"}'
-```
 
 List mentorship requests for the authenticated mentor:
-
-```bash
-curl -H "Authorization: Bearer <token>" \
-  http://127.0.0.1:8000/api/v1/mentorship-requests
-```
 
 ## License
 
