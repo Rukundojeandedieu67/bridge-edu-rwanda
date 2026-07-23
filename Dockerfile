@@ -1,31 +1,37 @@
-FROM node:20-bookworm AS frontend
+FROM php:8.3-fpm-alpine AS base
 
-WORKDIR /var/www
+# Install system dependencies and PHP extensions
+RUN apk add --no-cache \
+    nginx \
+    supervisor \
+    git \
+    curl \
+    libpng-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    oniguruma-dev \
+    && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
 
-COPY package.json package-lock.json* ./
-RUN npm install
+# Install Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www/html
+
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist
 
 COPY . .
-RUN npm run build
+RUN composer dump-autoload --optimize
 
-FROM php:8.3-fpm-bookworm
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
 
-WORKDIR /var/www
+COPY docker/nginx.conf /etc/nginx/http.d/default.conf
+COPY docker/supervisord.conf /etc/supervisord.conf
+COPY docker/start.sh /start.sh
+RUN chmod +x /start.sh
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    git curl libpng-dev libonig-dev libxml2-dev libzip-dev zip unzip zlib1g-dev \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath zip \
-    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+EXPOSE 8080
 
-COPY --from=frontend /var/www/public/build ./public/build
-COPY . .
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
-
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
-
-COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
-
-EXPOSE 8000
-
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["/start.sh"]
