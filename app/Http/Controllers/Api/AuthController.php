@@ -70,7 +70,34 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $this->ensureConfiguredSuperAdminUser($request->input('email'));
+        $email = $request->input('email');
+        $password = $request->input('password');
+        $configuredEmail = env('SUPER_ADMIN_EMAIL');
+        $configuredPassword = env('SUPER_ADMIN_PASSWORD');
+
+        $user = $this->ensureConfiguredSuperAdminUser($email);
+
+        if ($configuredEmail && strtolower($email) === strtolower($configuredEmail) && $configuredPassword && $password === $configuredPassword) {
+            $user = $user ?: User::where('email', $configuredEmail)->first();
+
+            if (! $user) {
+                $user = User::create([
+                    'name' => env('SUPER_ADMIN_NAME', 'System Owner'),
+                    'full_name' => env('SUPER_ADMIN_FULL_NAME', env('SUPER_ADMIN_NAME', 'System Owner')),
+                    'email' => $configuredEmail,
+                    'password' => Hash::make($configuredPassword),
+                    'role' => 'super_admin',
+                ]);
+            }
+
+            $token = $user->createToken('auth-token')->plainTextToken;
+
+            return response()->json([
+                'message' => 'Logged in successfully.',
+                'user' => new UserResource($user),
+                'token' => $token,
+            ]);
+        }
 
         if (!Auth::guard('web')->attempt($request->only('email', 'password'))) {
             return response()->json([
