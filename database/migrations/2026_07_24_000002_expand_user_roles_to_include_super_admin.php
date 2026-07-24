@@ -42,7 +42,9 @@ return new class extends Migration
             'SELECT id, name, full_name, email, email_verified_at, password, role, phone_number, district, sector, education_level, is_verified_mentor, remember_token, created_at, updated_at FROM users_old'
         );
 
-        DB::statement('CREATE UNIQUE INDEX IF NOT EXISTS users_email_unique ON users (email)');
+        Schema::table('users', function (Blueprint $table) {
+            $table->unique('email');
+        });
 
         $this->rebuildDependentTables();
 
