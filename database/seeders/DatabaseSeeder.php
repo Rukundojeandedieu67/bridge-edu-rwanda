@@ -20,13 +20,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $defaultPassword = 'password123';
+        $defaultPassword = env('SUPER_ADMIN_PASSWORD', 'password123');
+        $superAdminEmail = env('SUPER_ADMIN_EMAIL', 'admin@example.com');
+        $superAdminName = env('SUPER_ADMIN_NAME', 'System Owner');
+        $superAdminFullName = env('SUPER_ADMIN_FULL_NAME', $superAdminName);
 
         $superAdmin = User::updateOrCreate(
-            ['email' => 'admin@example.com'],
+            ['email' => $superAdminEmail],
             [
-                'name' => 'System Owner',
-                'full_name' => 'System Owner',
+                'name' => $superAdminName,
+                'full_name' => $superAdminFullName,
                 'password' => Hash::make($defaultPassword),
                 'role' => 'super_admin',
                 'phone_number' => '+250780000001',

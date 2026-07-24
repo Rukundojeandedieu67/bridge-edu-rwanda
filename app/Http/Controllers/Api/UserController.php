@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -64,11 +65,42 @@ class UserController extends Controller
             });
         }
 
-        if ($request->user()->role !== 'admin') {
+        if (! in_array($request->user()->role, ['admin', 'super_admin'], true)) {
             $query->where('id', $request->user()->id);
         }
 
         return UserResource::collection($query->paginate(12));
+    }
+
+    public function store(Request $request)
+    {
+        $this->authorize('create', User::class);
+
+        $rules = [
+            'full_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:8'],
+            'phone_number' => ['sometimes', 'nullable', 'string', 'max:20'],
+            'district' => ['sometimes', 'nullable', 'string', 'max:100'],
+            'sector' => ['sometimes', 'nullable', 'string', 'max:100'],
+            'education_level' => ['sometimes', 'nullable', 'string', 'max:100'],
+        ];
+
+        if (in_array($request->user()->role, ['admin', 'super_admin'], true)) {
+            $rules['role'] = ['sometimes', 'required', 'in:student,mentor,admin,super_admin'];
+            $rules['is_verified_mentor'] = ['sometimes', 'nullable', 'boolean'];
+        }
+
+        $data = $request->validate($rules);
+        $data['name'] = $data['full_name'];
+        $data['password'] = Hash::make($data['password']);
+
+        $user = User::create($data);
+
+        return response()->json([
+            'message' => 'User created successfully.',
+            'user' => new UserResource($user->fresh()),
+        ], 201);
     }
 
     public function show(User $user)
@@ -101,5 +133,16 @@ class UserController extends Controller
         $user->update($data);
 
         return new UserResource($user->fresh());
+    }
+
+    public function destroy(User $user)
+    {
+        $this->authorize('delete', $user);
+
+        $user->delete();
+
+        return response()->json([
+            'message' => 'User deleted successfully.',
+        ]);
     }
 }

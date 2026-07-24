@@ -30,7 +30,7 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/profile', [App\Http\Controllers\Api\UserController::class, 'profile']);
         Route::patch('/profile', [App\Http\Controllers\Api\UserController::class, 'updateProfile']);
-        Route::apiResource('users', App\Http\Controllers\Api\UserController::class)->only(['index','show','update']);
+        Route::apiResource('users', App\Http\Controllers\Api\UserController::class)->only(['index','show','store','update','destroy']);
         Route::apiResource('pathways', App\Http\Controllers\Api\PathwayController::class);
         Route::apiResource('pathways.steps', App\Http\Controllers\Api\PathwayStepController::class);
         Route::get('mentors', [App\Http\Controllers\Api\MentorController::class, 'index']);

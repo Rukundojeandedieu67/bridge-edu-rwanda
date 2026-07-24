@@ -42,3 +42,11 @@ services:
         value: sync
       - key: FILESYSTEM_DISK
         value: local
+      - key: SUPER_ADMIN_EMAIL
+        value: superadmin@example.com
+      - key: SUPER_ADMIN_PASSWORD
+        value: change-me-strong-password
+      - key: SUPER_ADMIN_NAME
+        value: System Owner
+      - key: SUPER_ADMIN_FULL_NAME
+        value: System Owner
