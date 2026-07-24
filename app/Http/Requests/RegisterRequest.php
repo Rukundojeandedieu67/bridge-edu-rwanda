@@ -21,7 +21,7 @@ class RegisterRequest extends FormRequest
             'district' => ['nullable', 'string', 'max:100'],
             'sector' => ['nullable', 'string', 'max:100'],
             'education_level' => ['nullable', 'string', 'max:100'],
-            'role' => ['nullable', 'in:student,mentor,admin'],
+            'role' => ['nullable', 'in:student,mentor,admin,super_admin'],
         ];
     }
 }

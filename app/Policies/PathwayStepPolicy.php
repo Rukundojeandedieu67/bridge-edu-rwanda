@@ -22,16 +22,16 @@ class PathwayStepPolicy
 
     public function create(User $user): bool
     {
-        return $user->role === 'admin';
+        return in_array($user->role, ['admin', 'super_admin'], true);
     }
 
     public function update(User $user, PathwayStep $step): bool
     {
-        return $user->role === 'admin';
+        return in_array($user->role, ['admin', 'super_admin'], true);
     }
 
     public function delete(User $user, PathwayStep $step): bool
     {
-        return $user->role === 'admin';
+        return in_array($user->role, ['admin', 'super_admin'], true);
     }
 }

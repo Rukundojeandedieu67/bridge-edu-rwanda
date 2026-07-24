@@ -22,8 +22,23 @@ class DatabaseSeeder extends Seeder
     {
         $defaultPassword = 'password123';
 
-        $admin = User::updateOrCreate(
+        $superAdmin = User::updateOrCreate(
             ['email' => 'admin@example.com'],
+            [
+                'name' => 'System Owner',
+                'full_name' => 'System Owner',
+                'password' => Hash::make($defaultPassword),
+                'role' => 'super_admin',
+                'phone_number' => '+250780000001',
+                'district' => 'Kigali',
+                'sector' => 'Nyarugenge',
+                'education_level' => 'University',
+                'is_verified_mentor' => false,
+            ]
+        );
+
+        $admin = User::updateOrCreate(
+            ['email' => 'admin2@example.com'],
             [
                 'name' => 'Admin User',
                 'full_name' => 'Admin User',
@@ -93,7 +108,7 @@ class DatabaseSeeder extends Seeder
                 'external_link' => 'https://example.com/scholarship',
                 'region_tags' => ['Kigali', 'Western'],
                 'is_verified' => true,
-                'created_by' => $admin->id,
+                'created_by' => $superAdmin->id,
             ],
             [
                 'title' => 'Youth Coding Bootcamp',
@@ -105,7 +120,7 @@ class DatabaseSeeder extends Seeder
                 'external_link' => 'https://example.com/bootcamp',
                 'region_tags' => ['Kigali'],
                 'is_verified' => true,
-                'created_by' => $admin->id,
+                'created_by' => $superAdmin->id,
             ],
         ];
 
@@ -172,6 +187,8 @@ class DatabaseSeeder extends Seeder
                 'student_id' => $student->id,
                 'mentor_id' => $mentorTwo->id,
                 'status' => 'completed',
+                'assigned_by_admin_id' => $admin->id,
+                'assigned_at' => now(),
                 'topic_of_interest' => 'Web Development',
             ]
         );

@@ -1,0 +1,71 @@
+﻿PHPUnit Started (PHPUnit 12.5.31 using PHP 8.3.14 (cli) on WINNT)
+Test Runner Configured
+Bootstrap Finished (C:\wamp64\www\BridgeEdu-rwanda\vendor/autoload.php)
+Event Facade Sealed
+Test Suite Loaded (12 tests)
+Test Runner Started
+Test Suite Sorted
+Test Suite Filtered (4 tests)
+Test Runner Execution Started (4 tests)
+Test Suite Started (C:\wamp64\www\BridgeEdu-rwanda\phpunit.xml, 4 tests)
+Test Suite Started (Feature, 4 tests)
+Test Suite Started (Tests\Feature\MentorshipWorkflowTest, 4 tests)
+Test Preparation Started (Tests\Feature\MentorshipWorkflowTest::test_student_can_create_a_mentorship_request)
+Before Test Method Called (Tests\Feature\MentorshipWorkflowTest::setUp)
+Before Test Method Finished:
+- Tests\Feature\MentorshipWorkflowTest::setUp
+Test Prepared (Tests\Feature\MentorshipWorkflowTest::test_student_can_create_a_mentorship_request)
+After Test Method Called (Tests\Feature\MentorshipWorkflowTest::tearDown)
+After Test Method Finished:
+- Tests\Feature\MentorshipWorkflowTest::tearDown
+Test Passed (Tests\Feature\MentorshipWorkflowTest::test_student_can_create_a_mentorship_request)
+Test Finished (Tests\Feature\MentorshipWorkflowTest::test_student_can_create_a_mentorship_request)
+Test Preparation Started (Tests\Feature\MentorshipWorkflowTest::test_mentor_can_claim_a_pending_request)
+Before Test Method Called (Tests\Feature\MentorshipWorkflowTest::setUp)
+Before Test Method Finished:
+- Tests\Feature\MentorshipWorkflowTest::setUp
+Test Prepared (Tests\Feature\MentorshipWorkflowTest::test_mentor_can_claim_a_pending_request)
+After Test Method Called (Tests\Feature\MentorshipWorkflowTest::tearDown)
+After Test Method Finished:
+- Tests\Feature\MentorshipWorkflowTest::tearDown
+Test Passed (Tests\Feature\MentorshipWorkflowTest::test_mentor_can_claim_a_pending_request)
+Test Finished (Tests\Feature\MentorshipWorkflowTest::test_mentor_can_claim_a_pending_request)
+Test Preparation Started (Tests\Feature\MentorshipWorkflowTest::test_mentor_can_list_and_filter_requests_by_status)
+Before Test Method Called (Tests\Feature\MentorshipWorkflowTest::setUp)
+Before Test Method Finished:
+- Tests\Feature\MentorshipWorkflowTest::setUp
+Test Prepared (Tests\Feature\MentorshipWorkflowTest::test_mentor_can_list_and_filter_requests_by_status)
+After Test Method Called (Tests\Feature\MentorshipWorkflowTest::tearDown)
+After Test Method Finished:
+- Tests\Feature\MentorshipWorkflowTest::tearDown
+Test Passed (Tests\Feature\MentorshipWorkflowTest::test_mentor_can_list_and_filter_requests_by_status)
+Test Finished (Tests\Feature\MentorshipWorkflowTest::test_mentor_can_list_and_filter_requests_by_status)
+Test Preparation Started (Tests\Feature\MentorshipWorkflowTest::test_admin_can_accept_and_assign_a_mentorship_request)
+Before Test Method Called (Tests\Feature\MentorshipWorkflowTest::setUp)
+Before Test Method Finished:
+- Tests\Feature\MentorshipWorkflowTest::setUp
+Test Prepared (Tests\Feature\MentorshipWorkflowTest::test_admin_can_accept_and_assign_a_mentorship_request)
+After Test Method Called (Tests\Feature\MentorshipWorkflowTest::tearDown)
+After Test Method Finished:
+- Tests\Feature\MentorshipWorkflowTest::tearDown
+Test Passed (Tests\Feature\MentorshipWorkflowTest::test_admin_can_accept_and_assign_a_mentorship_request)
+Test Finished (Tests\Feature\MentorshipWorkflowTest::test_admin_can_accept_and_assign_a_mentorship_request)
+After Last Test Method Called (Tests\Feature\MentorshipWorkflowTest::tearDownAfterClass)
+After Last Test Method Finished:
+- Tests\Feature\MentorshipWorkflowTest::tearDownAfterClass
+Test Suite Finished (Tests\Feature\MentorshipWorkflowTest, 4 tests)
+Test Suite Finished (Feature, 4 tests)
+Test Suite Finished (C:\wamp64\www\BridgeEdu-rwanda\phpunit.xml, 4 tests)
+Test Runner Execution Finished
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\MentorshipWorkflowTest[39m
+  [32;1mΓ£ô[39;22m[90m [39m[90mstudent can create a mentorship request[39m[90m                             [39m [90m0.71s[39m  
+  [32;1mΓ£ô[39;22m[90m [39m[90mmentor can claim a pending request[39m[90m                                  [39m [90m0.12s[39m  
+  [32;1mΓ£ô[39;22m[90m [39m[90mmentor can list and filter requests by status[39m[90m                       [39m [90m0.14s[39m  
+  [32;1mΓ£ô[39;22m[90m [39m[90madmin can accept and assign a mentorship request[39m[90m                    [39m [90m0.25s[39m  
+
+  [90mTests:[39m    [32;1m4 passed[39;22m[90m (14 assertions)[39m
+  [90mDuration:[39m [39m1.98s[39m
+
+Test Runner Finished
+PHPUnit Finished (Shell Exit Code: 0)

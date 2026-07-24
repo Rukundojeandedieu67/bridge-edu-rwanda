@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\MentorshipMessageResource;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class MentorshipRequestResource extends JsonResource
@@ -13,24 +15,26 @@ class MentorshipRequestResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'student_id' => $this->student_id,
+            'mentor_id' => $this->mentor_id,
+            'assigned_by_admin_id' => $this->assigned_by_admin_id,
+            'assigned_at' => $this->assigned_at?->toISOString(),
             'student' => $this->whenLoaded('student', function () {
-                return [
-                    'id' => $this->student->id,
-                    'full_name' => $this->student->full_name,
-                    'email' => $this->student->email,
-                ];
+                return new UserResource($this->student);
             }),
-            'mentor' => $this->when($this->mentor, function () {
-                return [
-                    'id' => $this->mentor->id,
-                    'full_name' => $this->mentor->full_name,
-                    'email' => $this->mentor->email,
-                ];
+            'mentor' => $this->whenLoaded('mentor', function () {
+                return new UserResource($this->mentor);
+            }),
+            'assigned_by_admin' => $this->whenLoaded('assignedBy', function () {
+                return new UserResource($this->assignedBy);
+            }),
+            'messages' => $this->whenLoaded('messages', function () {
+                return MentorshipMessageResource::collection($this->messages);
             }),
             'status' => $this->status,
             'topic_of_interest' => $this->topic_of_interest,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'created_at' => $this->created_at?->toISOString(),
+            'updated_at' => $this->updated_at?->toISOString(),
         ];
     }
 }

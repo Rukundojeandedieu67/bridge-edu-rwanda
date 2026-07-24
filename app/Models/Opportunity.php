@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\User;
 
 class Opportunity extends Model
@@ -33,6 +34,11 @@ class Opportunity extends Model
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function applications(): HasMany
+    {
+        return $this->hasMany(OpportunityApplication::class);
     }
 
     public function scopeCategory($query, string $category)
