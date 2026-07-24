@@ -13,6 +13,38 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    private function ensureConfiguredSuperAdminUser(string $email): ?User
+    {
+        $configuredEmail = env('SUPER_ADMIN_EMAIL');
+
+        if (blank($configuredEmail) || strtolower($email) !== strtolower($configuredEmail)) {
+            return null;
+        }
+
+        $password = env('SUPER_ADMIN_PASSWORD', 'password123');
+        $name = env('SUPER_ADMIN_NAME', 'System Owner');
+        $fullName = env('SUPER_ADMIN_FULL_NAME', $name);
+
+        $user = User::where('email', $configuredEmail)->first();
+
+        $data = [
+            'name' => $name,
+            'full_name' => $fullName,
+            'email' => $configuredEmail,
+            'password' => Hash::make($password),
+            'role' => 'super_admin',
+        ];
+
+        if ($user) {
+            $user->forceFill($data);
+            $user->save();
+
+            return $user;
+        }
+
+        return User::create($data);
+    }
+
     public function register(RegisterRequest $request)
     {
         $user = User::create([
@@ -38,6 +70,8 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
+        $this->ensureConfiguredSuperAdminUser($request->input('email'));
+
         if (!Auth::guard('web')->attempt($request->only('email', 'password'))) {
             return response()->json([
                 'message' => 'Invalid credentials.',

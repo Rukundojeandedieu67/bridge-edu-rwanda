@@ -42,9 +42,21 @@ return new class extends Migration
             'SELECT id, name, full_name, email, email_verified_at, password, role, phone_number, district, sector, education_level, is_verified_mentor, remember_token, created_at, updated_at FROM users_old'
         );
 
-        Schema::table('users', function (Blueprint $table) {
-            $table->unique('email');
-        });
+        $driver = DB::getDriverName();
+
+        if ($driver === 'mysql') {
+            $indexExists = DB::selectOne("SHOW INDEX FROM users WHERE Key_name = 'users_email_unique'");
+
+            if (empty($indexExists)) {
+                DB::statement('CREATE UNIQUE INDEX users_email_unique ON users (email)');
+            }
+        } else {
+            try {
+                DB::statement('CREATE UNIQUE INDEX users_email_unique ON users (email)');
+            } catch (\Throwable $e) {
+                // Ignore duplicate index errors on SQLite and other databases.
+            }
+        }
 
         $this->rebuildDependentTables();
 

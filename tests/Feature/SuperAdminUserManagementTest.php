@@ -10,6 +10,25 @@ class SuperAdminUserManagementTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_login_creates_configured_super_admin_account_from_environment(): void
+    {
+        putenv('SUPER_ADMIN_EMAIL=bootstrap@example.com');
+        putenv('SUPER_ADMIN_PASSWORD=bootstrap-pass');
+        putenv('SUPER_ADMIN_NAME=Bootstrap Admin');
+        putenv('SUPER_ADMIN_FULL_NAME=Bootstrap Admin');
+
+        $response = $this->postJson('/api/v1/auth/login', [
+            'email' => 'bootstrap@example.com',
+            'password' => 'bootstrap-pass',
+        ]);
+
+        $response->assertOk();
+        $this->assertDatabaseHas('users', [
+            'email' => 'bootstrap@example.com',
+            'role' => 'super_admin',
+        ]);
+    }
+
     public function test_super_admin_can_view_all_users(): void
     {
         $superAdmin = User::create([
