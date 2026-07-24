@@ -12,7 +12,7 @@ class OpportunityApplicationPolicy
 
     public function viewAny(User $user): bool
     {
-        return in_array($user->role, ['student', 'admin', 'super_admin'], true);
+        return in_array($user->role, ['student', 'mentor', 'admin', 'super_admin'], true);
     }
 
     public function view(User $user, OpportunityApplication $application): bool
@@ -22,7 +22,7 @@ class OpportunityApplicationPolicy
 
     public function create(User $user): bool
     {
-        return $user->role === 'student' || in_array($user->role, ['admin', 'super_admin'], true);
+        return in_array($user->role, ['student', 'mentor', 'admin', 'super_admin'], true);
     }
 
     public function update(User $user, OpportunityApplication $application): bool

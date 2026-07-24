@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
 {
@@ -180,34 +181,47 @@ class DatabaseSeeder extends Seeder
             );
         }
 
-        MentorshipRequest::updateOrCreate(
-            [
-                'student_id' => $student->id,
-                'mentor_id' => $mentorTwo->id,
-                'topic_of_interest' => 'Web Development',
-            ],
-            [
-                'student_id' => $student->id,
-                'mentor_id' => $mentorTwo->id,
-                'status' => 'completed',
-                'assigned_by_admin_id' => $admin->id,
-                'assigned_at' => now(),
-                'topic_of_interest' => 'Web Development',
-            ]
-        );
+        if (Schema::hasTable('mentorship_requests')) {
+            $mentorshipRequestData = [
+                [
+                    'student_id' => $student->id,
+                    'mentor_id' => $mentorTwo->id,
+                    'topic_of_interest' => 'Web Development',
+                    'status' => 'completed',
+                    'topic_of_interest' => 'Web Development',
+                ],
+                [
+                    'student_id' => $student->id,
+                    'mentor_id' => null,
+                    'topic_of_interest' => 'Data Science',
+                    'status' => 'pending',
+                ],
+            ];
 
-        MentorshipRequest::updateOrCreate(
-            [
-                'student_id' => $student->id,
-                'mentor_id' => null,
-                'topic_of_interest' => 'Data Science',
-            ],
-            [
-                'student_id' => $student->id,
-                'mentor_id' => null,
-                'status' => 'pending',
-                'topic_of_interest' => 'Data Science',
-            ]
-        );
+            foreach ($mentorshipRequestData as $payload) {
+                $attributes = [
+                    'student_id' => $payload['student_id'],
+                    'mentor_id' => $payload['mentor_id'],
+                    'topic_of_interest' => $payload['topic_of_interest'],
+                ];
+
+                $values = [
+                    'student_id' => $payload['student_id'],
+                    'mentor_id' => $payload['mentor_id'],
+                    'status' => $payload['status'],
+                    'topic_of_interest' => $payload['topic_of_interest'],
+                ];
+
+                if (Schema::hasColumn('mentorship_requests', 'assigned_by_admin_id')) {
+                    $values['assigned_by_admin_id'] = $admin->id;
+                }
+
+                if (Schema::hasColumn('mentorship_requests', 'assigned_at')) {
+                    $values['assigned_at'] = now();
+                }
+
+                MentorshipRequest::updateOrCreate($attributes, $values);
+            }
+        }
     }
 }

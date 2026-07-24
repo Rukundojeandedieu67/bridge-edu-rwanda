@@ -46,6 +46,41 @@ class OpportunityApplicationTest extends TestCase
             ->assertJsonPath('data.status', 'pending');
     }
 
+    public function test_mentor_can_submit_an_application_for_an_opportunity(): void
+    {
+        $mentor = User::create([
+            'name' => 'Mentor One',
+            'full_name' => 'Mentor One',
+            'email' => 'mentor@example.com',
+            'password' => bcrypt('password123'),
+            'role' => 'mentor',
+        ]);
+
+        $opportunity = Opportunity::create([
+            'title' => 'Mentor Career Support Program',
+            'category' => 'program',
+            'description' => 'Support for mentors building their profile.',
+            'provider_name' => 'BridgeEdu',
+            'eligibility_criteria' => 'Open to mentors.',
+            'application_deadline' => now()->addMonth()->toDateString(),
+            'is_verified' => true,
+            'created_by' => $mentor->id,
+        ]);
+
+        $token = $mentor->createToken('test-token')->plainTextToken;
+
+        $response = $this->withHeader('Authorization', 'Bearer '.$token)
+            ->postJson('/api/v1/opportunity-applications', [
+                'opportunity_id' => $opportunity->id,
+                'cover_letter' => 'I would like to join this opportunity.',
+            ]);
+
+        $response->assertStatus(201)
+            ->assertJsonPath('data.student.id', $mentor->id)
+            ->assertJsonPath('data.opportunity.id', $opportunity->id)
+            ->assertJsonPath('data.status', 'pending');
+    }
+
     public function test_admin_can_update_application_status(): void
     {
         $student = User::create([

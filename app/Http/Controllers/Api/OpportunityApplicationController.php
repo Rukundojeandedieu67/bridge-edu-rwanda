@@ -21,9 +21,9 @@ class OpportunityApplicationController extends Controller
         $user = $request->user();
         $query = OpportunityApplication::query()->with(['opportunity', 'student']);
 
-        if ($user->role === 'student') {
+        if (in_array($user->role, ['student', 'mentor'], true)) {
             $query->where('student_id', $user->id);
-        } elseif ($user->role !== 'admin') {
+        } elseif (! in_array($user->role, ['admin', 'super_admin'], true)) {
             $query->where('student_id', -1);
         }
 
